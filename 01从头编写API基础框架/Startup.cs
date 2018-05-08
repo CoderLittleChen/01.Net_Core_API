@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Net_Core_API.Services;
+using NLog.Extensions.Logging;
 
 namespace _01从头编写API基础框架
 {
@@ -25,11 +28,18 @@ namespace _01从头编写API基础框架
                 {
                     options.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
                 });
+
+            //注册服务 这里Transient 的service是每次请求都会创建一个新的实例
+
+            //这句话的意思是  当需要一个ILocalMailService实现的时候，Container就会提供一个LocalMailService的实例
+            services.AddTransient<ILocalMailService, LocalMailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddProvider(new NLogLoggerProvider());
+
             //Configure 方法是asp.net core用来具体指定如何处理每个http请求的，
             if (env.IsDevelopment())
             {

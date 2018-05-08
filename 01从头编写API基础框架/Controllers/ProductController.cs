@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Net_Core_API.Dto;
 using Net_Core_API.Services;
 using System;
@@ -17,6 +18,17 @@ namespace Net_Core_API.Controllers
     [Route("api/[controller]")]
     public class ProductController : Controller
     {
+        private readonly ILogger<ProductController> _logger;
+        private readonly ILocalMailService _localMailService;
+
+
+        public ProductController(ILogger<ProductController> logger, ILocalMailService localMailService)
+        {
+            _logger = logger;
+            _localMailService = localMailService;
+        }
+
+
         //Routing路由有两种方式：Convention-based（约定） attribute-based（基于路由属性配置的）
         //前者主要用于MVC  （返回View或者Razor Page）   Web Api推荐使用后者
 
@@ -48,16 +60,27 @@ namespace Net_Core_API.Controllers
         //前者 是api/controller/id的值  {}代表占位符  里面是需要填的参数   而后者是  api/controller/id 表示请求的路径
         [Route("{id}", Name = "GetProduct")]
         //[Route("id")]
-        //[HttpPost]
+        [HttpGet]
         public IActionResult GetProduct(int id)
         {
             //查询单条数据
-            var product = new JsonResult(ProductService.Current.Products.First(x => x.Id == id));
-            if (product == null)
+            try
             {
-                return NotFound();
+                throw new Exception("来个异常");
+                var product = ProductService.Current.Products.SingleOrDefault(x => x.Id == id);
+                if (product == null)
+                {
+                    //记录日志
+                    _logger.LogInformation("id为{0}的产品没有找到", id);
+                    return NotFound();
+                }
+                return Ok(product);
             }
-            return Ok(product);
+            catch (Exception)
+            {
+                _logger.LogCritical("查找id为{0}的产品没有找到", id);
+                return StatusCode(500, "处理请求的时候发生了错误");
+            }
         }
 
 
@@ -183,6 +206,7 @@ namespace Net_Core_API.Controllers
                 return NotFound();
             }
             ProductService.Current.Products.Remove(model);
+            _localMailService.Send();
             return NoContent();
         }
 
