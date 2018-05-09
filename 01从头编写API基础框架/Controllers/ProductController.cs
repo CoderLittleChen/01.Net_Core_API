@@ -21,13 +21,12 @@ namespace Net_Core_API.Controllers
         private readonly ILogger<ProductController> _logger;
         private readonly ILocalMailService _localMailService;
 
-
+        
         public ProductController(ILogger<ProductController> logger, ILocalMailService localMailService)
         {
-            _logger = logger;
+            _logger = logger;   
             _localMailService = localMailService;
         }
-
 
         //Routing路由有两种方式：Convention-based（约定） attribute-based（基于路由属性配置的）
         //前者主要用于MVC  （返回View或者Razor Page）   Web Api推荐使用后者
@@ -108,7 +107,7 @@ namespace Net_Core_API.Controllers
             }
 
             var maxId = ProductService.Current.Products.Max(x => x.Id);
-            var newProduct = new Product
+            var newProduct = new ProductDto
             {
                 Id = ++maxId,
                 Name = product.Name,

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _01从头编写API基础框架;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,12 +14,15 @@ namespace Net_Core_API.Services
 
     public class LocalMailService : ILocalMailService
     {
-        private string _mailTo = "cm@qq.com";
-        private string _mailFrom = "cm@alibaba.com";
+        //这里是通过在  Startup 构造函数中，new IConfigration对象
+
+        //然后这里通过对比appSetting.json文件的格式，来取值
+        private string _mailTo = Startup._configuration["mailSettings:mailToAddress"];
+        private string _mailFrom = Startup._configuration["mailsSettings:mailFromAddress"];
 
         public void Send()
         {
-            Debug.WriteLine("张三给李四发送了文件");
+            Debug.WriteLine("{0}给{1}发送了文件", _mailTo, _mailFrom);
         }
     }
 }

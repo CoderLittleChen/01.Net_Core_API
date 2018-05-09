@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Net_Core_API.Entities;
 using Net_Core_API.Services;
 using NLog.Extensions.Logging;
 
@@ -15,10 +17,19 @@ namespace _01从头编写API基础框架
 {
     public class Startup
     {
+        //声明对象 读取json配置文件
+        public static IConfiguration _configuration { get; private set; }
+
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<MyContext>();
             //ConfigureServices  这个方法是用来把services加入到container(asp.net core的容器)中
 
             //注册MVC到Container

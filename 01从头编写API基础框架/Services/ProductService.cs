@@ -9,62 +9,62 @@ namespace Net_Core_API.Services
     public class ProductService
     {
         public static ProductService Current { get; } = new ProductService();
-        public List<Product> Products { get; }
+        public List<ProductDto> Products { get; }
         private ProductService()
         {
-            Products = new List<Product>()
+            Products = new List<ProductDto>()
             {
-                new Product()
+                new ProductDto()
                 {
                     Id=1,
                     Name="张三",
                     Price=1.1f,
-                    Materials = new List<Material>
+                    Materials = new List<MaterialDto>
                     {
-                        new Material
+                        new MaterialDto
                         {
                             Id = 1,
                             Name = "水"
                         },
-                        new Material
+                        new MaterialDto
                         {
                             Id = 2,
                             Name = "奶粉"
                         }
                     }
                 },
-                new Product()
+                new ProductDto()
                 {
                     Id=2,
                     Name="李四",
                     Price=2.2f,
-                    Materials = new List<Material>
+                    Materials = new List<MaterialDto>
                     {
-                        new Material
+                        new MaterialDto
                         {
                             Id = 1,
                             Name = "火"
                         },
-                        new Material
+                        new MaterialDto
                         {
                             Id = 2,
                             Name = "水果"
                         }
                     }
                 },
-                new Product
+                new ProductDto
                 {
                     Id = 3,
                     Name = "王五",
                     Price = 7.5f,
-                    Materials = new List<Material>
+                    Materials = new List<MaterialDto>
                     {
-                        new Material
+                        new MaterialDto
                         {
                             Id = 1,
                             Name = "风"
                         },
-                        new Material
+                        new MaterialDto
                         {
                             Id = 2,
                             Name = "酸奶"

@@ -6,7 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="appSettings.Product.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="appSettings.Product.json" />
   </ItemGroup>
 
   <ItemGroup>

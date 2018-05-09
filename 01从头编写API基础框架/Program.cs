@@ -34,8 +34,8 @@ namespace _01从头编写API基础框架
             //2、设置Content根目录，将当前项目的跟目录作为ContentRoot的目录
             //3、读取appsetting.json 配置文件，开发环境下的UserSecrets以及环境变量和命令行参数
             //4、读取配置文件中的Logging节点，对日志系统进行配置
-            //5、添加IISIntegrated中间件 
- 
+            //5、添加IISIntegrated中间件
+            
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .Build();
