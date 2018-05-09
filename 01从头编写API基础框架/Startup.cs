@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -29,7 +30,9 @@ namespace _01从头编写API基础框架
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MyContext>();
+            string conStr = @"Data Source=CM;Initial Catalog=.Net_Core_Demo;Integrated Security=True";
+
+            services.AddDbContext<MyContext>(a => a.UseSqlServer(conStr));
             //ConfigureServices  这个方法是用来把services加入到container(asp.net core的容器)中
 
             //注册MVC到Container
