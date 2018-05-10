@@ -1,4 +1,4 @@
-﻿1、IOC  控制反转（Inserver  of  Control）  一般分为依赖注入（Dependency  Injection）和依赖查找（Dependency  Lookup）
+﻿1、IOC  控制反转（Inverse  of  Control）  一般分为依赖注入（Dependency  Injection）和依赖查找（Dependency  Lookup）
 2、规则
 	高层次的模块不应该依赖于低层次的模块，他们都应该依赖于抽象
 	抽象不应该依赖于具体，具体应该依赖于抽象

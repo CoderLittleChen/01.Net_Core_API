@@ -13,8 +13,9 @@ namespace Net_Core_API.Repositories
         //查询单个Product
         Product GetProduct(int ProductId, bool includeMaterials);
         //查询单个Product下的Materials
-        IEnumerable<Material> GetMaterials(int productId);
+        IEnumerable<Material> GetMaterialsForProduct(int productId);
         //查询单个Product下的某个Materials
-        Material GetMaterial(int productId, int materialId);
+        Material GetMaterialForProduct(int productId, int materialId);
+        bool ProductExist(int productId);
     }
 }

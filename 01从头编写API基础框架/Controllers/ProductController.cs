@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Net_Core_API.Dto;
@@ -39,17 +40,8 @@ namespace Net_Core_API.Controllers
         public IActionResult GetProducts()
         {
             var products = _productRepository.GetProducts();
-            var results = new List<ProductWithoutMaterialDto>();
-            foreach (var item in products)
-            {
-                results.Add(new ProductWithoutMaterialDto()
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    Price = item.Price,
-                    Description = item.Description
-                });
-            }
+            //使用map对象来进行映射，<T>  其中T是目标类型，可以是一个model 也可以是一个集合，括号里面的参数是原对象
+            var results = Mapper.Map<IEnumerable<ProductWithoutMaterialDto>>(products);
             return Ok(results);
         }
 
@@ -75,6 +67,9 @@ namespace Net_Core_API.Controllers
         [Route("{id}", Name = "GetProduct")]
         //[Route("id")]
         [HttpGet]
+
+        //这里的Action方法  有两个参数   则Api  请求路径为  api/product/5?includeMaterial=True
+        //如果有多个  query  string 的参数 用&分开
         public IActionResult GetProduct(int id, bool includeMaterial = false)
         {
             #region 注释
@@ -106,33 +101,12 @@ namespace Net_Core_API.Controllers
             }
             if (includeMaterial)
             {
-                var productWithMaterialResult = new ProductDto
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Price = product.Price,
-                    Description = product.Description
-                };
-
-                foreach (var item in product.Materials)
-                {
-                    productWithMaterialResult.Materials.Add(new MaterialDto
-                    {
-                        Id = item.Id,
-                        Name = item.Name
-                    });
-                }
+                var productWithMaterialResult = Mapper.Map<ProductDto>(product);
                 return Ok(productWithMaterialResult);
             }
 
-            var onlyProductResult = new ProductDto
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price,
-                Description = product.Description
-            };
-            return Ok(onlyProductResult);
+            var onlyProductResult = Mapper.Map<ProductWithoutMaterialDto>(product);
+            return Ok(onlyProductResult);   
         }
 
 

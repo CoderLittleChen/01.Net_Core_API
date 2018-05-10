@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Net_Core_API.Dto;
 using Net_Core_API.Entities;
 using Net_Core_API.Repositories;
 using Net_Core_API.Services;
@@ -55,7 +57,7 @@ namespace _01从头编写API基础框架
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,MyContext myContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, MyContext myContext)
         {
             loggerFactory.AddProvider(new NLogLoggerProvider());
 
@@ -75,6 +77,16 @@ namespace _01从头编写API基础框架
 
             //这里要注意顺序  
             app.UseMvc();
+
+            //表示创建一个 从Product到ProductWithoutMaterialDto
+            //AutoMapper是基于约定的，原对象的属性值会被映射到目标对象相同属性名的属性上，如果属性不存在 则忽略它
+
+            Mapper.Initialize(x =>
+            {
+                x.CreateMap<Product, ProductWithoutMaterialDto>();
+                x.CreateMap<Product, ProductDto>();
+                x.CreateMap<Material, MaterialDto>();
+            });
 
             app.Run(async (context) =>
             {
