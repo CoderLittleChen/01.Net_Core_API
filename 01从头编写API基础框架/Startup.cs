@@ -49,7 +49,7 @@ namespace _01从头编写API基础框架
             //这句话的意思是  当需要一个ILocalMailService实现的时候，Container就会提供一个LocalMailService的实例
             services.AddTransient<ILocalMailService, LocalMailService>();
 
-            //
+            //针对Repository  最好的生命周期是Scoped(每个请求生成一个实例) <>里面前边是他的合约接口，后边是具体实现
             services.AddScoped<IProductRepository, ProductRepository>();
 
         }

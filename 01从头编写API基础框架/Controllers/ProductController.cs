@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Net_Core_API.Dto;
+using Net_Core_API.Repositories;
 using Net_Core_API.Services;
 using System;
 using System.Collections.Generic;
@@ -20,12 +21,14 @@ namespace Net_Core_API.Controllers
     {
         private readonly ILogger<ProductController> _logger;
         private readonly ILocalMailService _localMailService;
+        private readonly IProductRepository _productRepository;
 
-        
-        public ProductController(ILogger<ProductController> logger, ILocalMailService localMailService)
+
+        public ProductController(ILogger<ProductController> logger, ILocalMailService localMailService, IProductRepository productRepository)
         {
-            _logger = logger;   
+            _logger = logger;
             _localMailService = localMailService;
+            _productRepository = productRepository;
         }
 
         //Routing路由有两种方式：Convention-based（约定） attribute-based（基于路由属性配置的）
@@ -33,9 +36,21 @@ namespace Net_Core_API.Controllers
 
         [Route("GetProducts")]
         [HttpPost]
-        public JsonResult GetProducts()
+        public IActionResult GetProducts()
         {
-            return new JsonResult(ProductService.Current.Products);
+            var products = _productRepository.GetProducts();
+            var results = new List<ProductWithoutMaterialDto>();
+            foreach (var item in products)
+            {
+                results.Add(new ProductWithoutMaterialDto()
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    Price = item.Price,
+                    Description = item.Description
+                });
+            }
+            return Ok(results);
         }
 
         //[HttpGet]
@@ -60,26 +75,64 @@ namespace Net_Core_API.Controllers
         [Route("{id}", Name = "GetProduct")]
         //[Route("id")]
         [HttpGet]
-        public IActionResult GetProduct(int id)
+        public IActionResult GetProduct(int id, bool includeMaterial = false)
         {
+            #region 注释
             //查询单条数据
-            try
+            //try
+            //{
+            //    throw new Exception("来个异常");
+            //    var product = ProductService.Current.Products.SingleOrDefault(x => x.Id == id);
+            //    if (product == null)
+            //    {
+            //        //记录日志
+            //        _logger.LogInformation("id为{0}的产品没有找到", id);
+            //        return NotFound();
+            //    }
+            //    return Ok(product);
+            //}
+            //catch (Exception)
+            //{
+            //    _logger.LogCritical("查找id为{0}的产品没有找到", id);
+            //    return StatusCode(500, "处理请求的时候发生了错误");
+            //} 
+            #endregion
+
+            //bool  参数 表示是否带着Material表的数据一起查询 
+            var product = _productRepository.GetProduct(id, includeMaterial);
+            if (product == null)
             {
-                throw new Exception("来个异常");
-                var product = ProductService.Current.Products.SingleOrDefault(x => x.Id == id);
-                if (product == null)
+                return NotFound();
+            }
+            if (includeMaterial)
+            {
+                var productWithMaterialResult = new ProductDto
                 {
-                    //记录日志
-                    _logger.LogInformation("id为{0}的产品没有找到", id);
-                    return NotFound();
+                    Id = product.Id,
+                    Name = product.Name,
+                    Price = product.Price,
+                    Description = product.Description
+                };
+
+                foreach (var item in product.Materials)
+                {
+                    productWithMaterialResult.Materials.Add(new MaterialDto
+                    {
+                        Id = item.Id,
+                        Name = item.Name
+                    });
                 }
-                return Ok(product);
+                return Ok(productWithMaterialResult);
             }
-            catch (Exception)
+
+            var onlyProductResult = new ProductDto
             {
-                _logger.LogCritical("查找id为{0}的产品没有找到", id);
-                return StatusCode(500, "处理请求的时候发生了错误");
-            }
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                Description = product.Description
+            };
+            return Ok(onlyProductResult);
         }
 
 

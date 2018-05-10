@@ -22,10 +22,15 @@ namespace Net_Core_API.Repositories
 
         public Product GetProduct(int ProductId, bool includeMaterials)
         {
-            //if (includeMaterials)
-            //{
-            //    return _myContext.Produc      
-            //}
+            if (includeMaterials)
+            {
+                //这里的  include方法 没有 怎么实现？ 查询有问题
+                List<Material> materials = _myContext.Materials.Where(x => x.ProductId == ProductId).ToList();
+                if (materials!=null)
+                {
+                    return _myContext.Products.ToList().Find(x => x.Id == ProductId);
+                }
+            }
             return _myContext.Products.Find(ProductId);
         }
 
@@ -39,11 +44,6 @@ namespace Net_Core_API.Repositories
         {
             return _myContext.Materials.FirstOrDefault(x => x.ProductId == productId && x.Id == materialId);
         }
-
-
-
-
-
 
     }
 }

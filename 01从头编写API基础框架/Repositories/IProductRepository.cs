@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Net_Core_API.Repositories
 {
-    interface IProductRepository
+    public interface IProductRepository
     {
         //查询Products
         IEnumerable<Product> GetProducts();
         //查询单个Product
-        Product GetProduct(int ProductId,bool includeMaterials);
+        Product GetProduct(int ProductId, bool includeMaterials);
         //查询单个Product下的Materials
         IEnumerable<Material> GetMaterials(int productId);
         //查询单个Product下的某个Materials

@@ -15,7 +15,7 @@ namespace Net_Core_API.Dto
 
         [Display(Name = "价格")]
         [Range(0, Double.MaxValue, ErrorMessage = "{0}的值必须大于{1}")]
-        public float Price { get; set; }  
+        public decimal Price { get; set; }  
 
         [Display(Name = "描述")]
         [MaxLength(100, ErrorMessage = "{0}的长度不可以超过{1}")]
