@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Net_Core_API.Entities;
+using Net_Core_API.Repositories;
 using Net_Core_API.Services;
 using NLog.Extensions.Logging;
 
@@ -30,7 +31,7 @@ namespace _01从头编写API基础框架
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            string conStr = @"Data Source=CM;Initial Catalog=.Net_Core_Demo;Integrated Security=True";
+            string conStr = _configuration["connectionstr:conStr"];
 
             services.AddDbContext<MyContext>(a => a.UseSqlServer(conStr));
             //ConfigureServices  这个方法是用来把services加入到container(asp.net core的容器)中
@@ -47,10 +48,14 @@ namespace _01从头编写API基础框架
 
             //这句话的意思是  当需要一个ILocalMailService实现的时候，Container就会提供一个LocalMailService的实例
             services.AddTransient<ILocalMailService, LocalMailService>();
+
+            //
+            services.AddScoped<IProductRepository, ProductRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,MyContext myContext)
         {
             loggerFactory.AddProvider(new NLogLoggerProvider());
 
@@ -63,6 +68,8 @@ namespace _01从头编写API基础框架
             {
                 app.UseExceptionHandler();
             }
+
+            myContext.EnsureSeedDataForContext();
 
             app.UseStatusCodePages();
 

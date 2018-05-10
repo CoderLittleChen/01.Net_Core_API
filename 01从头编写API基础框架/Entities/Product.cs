@@ -12,5 +12,6 @@ namespace Net_Core_API.Entities
         public string Name { get; set; }
         public float Price { get; set; }
         public string Description { get; set; }
+        public ICollection<Material> Materials { get; set; }
     }
 }

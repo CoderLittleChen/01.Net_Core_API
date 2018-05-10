@@ -193,7 +193,7 @@ namespace Net_Core_API.Controllers
             return NoContent();
         }
 
-        //删除Delete s a a 
+        //删除Delete 
         [Route("{id}")]
         [HttpDelete]
         public IActionResult Delete(int id)
