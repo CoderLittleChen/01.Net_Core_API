@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Net_Core_API.Dto;
 using Net_Core_API.Repositories;
@@ -33,11 +34,13 @@ namespace Net_Core_API.Controllers
             }
 
             var materials = _productRepository.GetMaterialsForProduct(productId);
-            var result = materials.Select(a => new MaterialDto
-            {
-                Id = a.Id,
-                Name = a.Name
-            }).ToList();
+            //执行映射操作  注意这里是集合映射，下面是单个对象 映射
+            var result = Mapper.Map<IEnumerable<MaterialDto>>(materials);
+            //var result = materials.Select(a => new MaterialDto
+            //{
+            //    Id = a.Id,
+            //    Name = a.Name
+            //}).ToList();
             return Ok(result);
         }
 
@@ -55,11 +58,13 @@ namespace Net_Core_API.Controllers
             {
                 return NotFound();
             }
-            var result = new MaterialDto
-            {
-                Id = material.Id,
-                Name = material.Name  
-            };
+
+            var result = Mapper.Map<MaterialDto>(material);
+            //var result = new MaterialDto
+            //{
+            //    Id = material.Id,
+            //    Name = material.Name
+            //};
             return Ok(result);
         }
 

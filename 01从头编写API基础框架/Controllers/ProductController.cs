@@ -97,8 +97,8 @@ namespace Net_Core_API.Controllers
             var product = _productRepository.GetProduct(id, includeMaterial);
             if (product == null)
             {
-                return NotFound();
-            }
+                return NotFound(); 
+            }    
             if (includeMaterial)
             {
                 var productWithMaterialResult = Mapper.Map<ProductDto>(product);
@@ -125,7 +125,7 @@ namespace Net_Core_API.Controllers
             {
                 //这里的ModelState 是一个Dictionary
                 return BadRequest(ModelState);
-            }
+            } 
 
             if (product.Name == "产品")
             {
@@ -133,7 +133,7 @@ namespace Net_Core_API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var maxId = ProductService.Current.Products.Max(x => x.Id);
+            var maxId = ProductService.Current.Products.Max(x => x.Id);   
             var newProduct = new ProductDto
             {
                 Id = ++maxId,

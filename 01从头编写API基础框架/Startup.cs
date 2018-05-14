@@ -84,6 +84,7 @@ namespace _01从头编写API基础框架
             Mapper.Initialize(x =>
             {
                 x.CreateMap<Product, ProductWithoutMaterialDto>();
+                //意思是创建一个从Product到ProductDto的映射关系
                 x.CreateMap<Product, ProductDto>();
                 x.CreateMap<Material, MaterialDto>();
             });
