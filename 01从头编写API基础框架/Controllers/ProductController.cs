@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Net_Core_API.Dto;
+using Net_Core_API.Entities;
 using Net_Core_API.Repositories;
 using Net_Core_API.Services;
 using System;
@@ -97,8 +98,8 @@ namespace Net_Core_API.Controllers
             var product = _productRepository.GetProduct(id, includeMaterial);
             if (product == null)
             {
-                return NotFound(); 
-            }    
+                return NotFound();
+            }
             if (includeMaterial)
             {
                 var productWithMaterialResult = Mapper.Map<ProductDto>(product);
@@ -106,7 +107,7 @@ namespace Net_Core_API.Controllers
             }
 
             var onlyProductResult = Mapper.Map<ProductWithoutMaterialDto>(product);
-            return Ok(onlyProductResult);   
+            return Ok(onlyProductResult);
         }
 
 
@@ -125,7 +126,7 @@ namespace Net_Core_API.Controllers
             {
                 //这里的ModelState 是一个Dictionary
                 return BadRequest(ModelState);
-            } 
+            }
 
             if (product.Name == "产品")
             {
@@ -133,16 +134,25 @@ namespace Net_Core_API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var maxId = ProductService.Current.Products.Max(x => x.Id);   
-            var newProduct = new ProductDto
+            //var maxId = ProductService.Current.Products.Max(x => x.Id);   
+            //var newProduct = new ProductDto
+            //{
+            //    Id = ++maxId,
+            //    Name = product.Name,
+            //    Price = product.Price,
+            //    Description = product.Description
+            //};
+            //ProductService.Current.Products.Add(newProduct);
+
+            var newProduct = Mapper.Map<Product>(product);
+            _productRepository.AddProduct(newProduct);
+            if (!_productRepository.Save())
             {
-                Id = ++maxId,
-                Name = product.Name,
-                Price = product.Price,
-                Description = product.Description
-            };
-            ProductService.Current.Products.Add(newProduct);
-            return CreatedAtRoute("GetProduct", new { id = newProduct.Id }, newProduct);
+                return StatusCode(500, "保存产品的时候出错！！");
+            }
+            var dto = Mapper.Map<ProductWithoutMaterialDto>(newProduct);
+
+            return CreatedAtRoute("GetProduct", new { id = dto.Id }, dto);
         }
 
 
@@ -189,7 +199,7 @@ namespace Net_Core_API.Controllers
             }
             var model = ProductService.Current.Products.First(x => x.Id == id);
             if (model == null)
-            {
+            {  
                 return NotFound();
             }
 

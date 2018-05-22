@@ -69,5 +69,15 @@ namespace Net_Core_API.Repositories
             return _myContext.Products.Any(x => x.Id == productId);
         }
 
+        public void AddProduct(Product product)
+        {
+            _myContext.Products.Add(product);
+        }
+
+        public bool Save()
+        {
+            return _myContext.SaveChanges() >= 0;
+        }
+
     }
 }

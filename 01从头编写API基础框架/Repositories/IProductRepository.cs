@@ -17,5 +17,8 @@ namespace Net_Core_API.Repositories
         //查询单个Product下的某个Materials
         Material GetMaterialForProduct(int productId, int materialId);
         bool ProductExist(int productId);
+
+        void AddProduct(Product product);
+        bool Save();
     }
 }
