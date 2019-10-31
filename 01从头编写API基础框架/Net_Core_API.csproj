@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.0-alpha-0001" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.9" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.0.1" />
   </ItemGroup>
